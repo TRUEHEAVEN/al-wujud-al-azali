@@ -1,0 +1,40 @@
+:root {
+  color-scheme: dark;
+
+  --void-black: #050508;
+  --void-raised: #0f0f14;
+  --void-panel: #13131a;
+  --void-deep: #020204;
+  --gold-primary: #c9a84c;
+  --gold-dim: #7a6330;
+  --gold-bright: #ffd980;
+  --gold-muted: #9e8440;
+  --blood-red: #8b1a1a;
+  --spirit-blue: #1a3a6b;
+  --ash-white: #d4ccba;
+  --ash-faint: #a19680;
+  --glyph-glow: #ffe8a0;
+  --void-particle: rgb(255 232 160 / 35%);
+
+  --font-display: 'Cinzel Decorative', Georgia, serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-ui: 'Inter', 'Segoe UI', sans-serif;
+  --font-lore: 'Noto Sans Arabic', 'Noto Naskh Arabic', serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --line-fine: 1px;
+  --line-heavy: 2px;
+  --radius-tight: 2px;
+
+  --glow-soft: 0 0 22px rgb(255 232 160 / 18%);
+  --glow-hard: 0 0 35px rgb(255 217 128 / 22%);
+  --shadow-panel: 0 0 0 1px rgb(122 99 48 / 70%), 0 24px 48px rgb(0 0 0 / 55%);
+  --shadow-glow: 0 0 30px rgb(255 232 160 / 16%);
+}
