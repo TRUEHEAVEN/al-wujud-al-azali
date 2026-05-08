@@ -2,6 +2,7 @@ import type { Character } from './character'
 import type { Circle } from './circle'
 import type { CombatState } from './combat'
 import type { ISODateString } from './common'
+import type { LootItem } from './exploration'
 import type { NarrativeEvent } from './narrative'
 import type { TrialResult } from './trials'
 import type { WorldNode } from './world'
@@ -17,12 +18,16 @@ export interface WorldState {
   currentNodeId: string | null
   nodes: WorldNode[]
   visitedNodeIds: string[]
+  revealedHiddenNodeIds: string[]
+  inventory: LootItem[]
+  discoveredGameIds: string[]
 }
 
 export interface NarrativeState {
   activeEventId: string | null
   queue: NarrativeEvent[]
   flags: Record<string, boolean>
+  unlockedCodexIds: string[]
 }
 
 export interface CultivationState {

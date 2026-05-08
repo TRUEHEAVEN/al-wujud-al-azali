@@ -7,6 +7,7 @@ import {
   type Character,
   type CombatState,
   type GameState,
+  type LootItem,
   type NarrativeEvent,
   type TimeState,
   type WorldNode,
@@ -27,6 +28,9 @@ type WorldSlice = {
   setWorldNodes: (nodes: WorldNode[]) => void
   visitNode: (nodeId: string) => void
   setCurrentNode: (nodeId: string | null) => void
+  revealHiddenNode: (nodeId: string) => void
+  addLootToInventory: (items: LootItem[]) => void
+  markDiscoveryComplete: (gameId: string) => void
 }
 
 type CombatSlice = {
@@ -43,6 +47,8 @@ type NarrativeSlice = {
   setActiveEvent: (eventId: string | null) => void
   setNarrativeFlag: (key: string, value: boolean) => void
   dequeueEvent: () => NarrativeEvent | null
+  unlockCodex: (entryId: string) => void
+  hasCodexEntry: (entryId: string) => boolean
 }
 
 type CultivationSlice = {
@@ -142,12 +148,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
     currentNodeId: null,
     nodes: [],
     visitedNodeIds: [],
+    revealedHiddenNodeIds: [],
+    inventory: [],
+    discoveredGameIds: [],
   },
   combat: null,
   narrative: {
     activeEventId: null,
     queue: [],
     flags: {},
+    unlockedCodexIds: [],
   },
   cultivation: {
     mysteryBoostMultiplier: 1,
@@ -273,6 +283,40 @@ export const useGameStore = create<GameStore>((set, get) => ({
       world: { ...state.world, currentNodeId: nodeId },
       updatedAt: nowIso(),
     })),
+  revealHiddenNode: (nodeId) =>
+    set((state) => {
+      if (state.world.revealedHiddenNodeIds.includes(nodeId)) return state
+      const nextNodes = state.world.nodes.map((node) =>
+        node.id === nodeId ? { ...node, hidden: false } : node,
+      )
+      return {
+        world: {
+          ...state.world,
+          nodes: nextNodes,
+          revealedHiddenNodeIds: [...state.world.revealedHiddenNodeIds, nodeId],
+        },
+        updatedAt: nowIso(),
+      }
+    }),
+  addLootToInventory: (items) =>
+    set((state) => ({
+      world: {
+        ...state.world,
+        inventory: [...state.world.inventory, ...items],
+      },
+      updatedAt: nowIso(),
+    })),
+  markDiscoveryComplete: (gameId) =>
+    set((state) => {
+      if (state.world.discoveredGameIds.includes(gameId)) return state
+      return {
+        world: {
+          ...state.world,
+          discoveredGameIds: [...state.world.discoveredGameIds, gameId],
+        },
+        updatedAt: nowIso(),
+      }
+    }),
 
   startCombat: (payload) =>
     set({
@@ -332,6 +376,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
       updatedAt: nowIso(),
     })
     return first
+  },
+  unlockCodex: (entryId) =>
+    set((state) => {
+      if (state.narrative.unlockedCodexIds.includes(entryId)) return state
+      return {
+        narrative: {
+          ...state.narrative,
+          unlockedCodexIds: [...state.narrative.unlockedCodexIds, entryId],
+        },
+        updatedAt: nowIso(),
+      }
+    }),
+  hasCodexEntry: (entryId) => {
+    return get().narrative.unlockedCodexIds.includes(entryId)
   },
 
   setMysteryBoostMultiplier: (multiplier) =>
@@ -410,6 +468,7 @@ export const selectIsInCombat = (state: GameStore) =>
 export const selectExplorableNodes = (state: GameStore) => {
   const visited = new Set(state.world.visitedNodeIds)
   return state.world.nodes.filter((node) => {
+    if (node.hidden) return false
     if (node.type === WorldNodeType.Safe || node.type === WorldNodeType.Story) {
       return true
     }

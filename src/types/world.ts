@@ -1,4 +1,5 @@
 import type { NarrativeEvent } from './narrative'
+import type { HazardType, DiscoveryGame, LootItem } from './exploration'
 
 export const WorldNodeType = {
   Safe: 'safe',
@@ -19,4 +20,10 @@ export interface WorldNode {
   connections: string[]
   events: NarrativeEvent[]
   visited: boolean
+  hazard?: HazardType
+  hidden: boolean
+  perceptionRequired: number
+  discoveryGame?: DiscoveryGame
+  loot?: LootItem[]
+  combatModifiers?: string[]
 }

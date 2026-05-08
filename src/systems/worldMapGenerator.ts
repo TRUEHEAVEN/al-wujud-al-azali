@@ -1,7 +1,13 @@
 import { WorldNodeType, type WorldNode, type NarrativeEvent } from '../types'
 import type { Character } from '../types/character'
+import { HazardType } from '../types/exploration'
+import { getRegionMechanics } from '../data/explorationData'
+import { generateDiscoveryGame, generateLootDrop } from './explorationEngine'
 
-const REGIONS: Record<number, { name: string; description: string; nodeCount: number; dangerRatio: number }> = {
+const REGIONS: Record<
+  number,
+  { name: string; description: string; nodeCount: number; dangerRatio: number }
+> = {
   1: { name: 'The Mortal Expanse', description: 'Where all journeys begin. The veil between mortality and cultivation is thinnest here.', nodeCount: 7, dangerRatio: 0.3 },
   2: { name: 'The Aspirant Marches', description: 'A land of awakening senses. Whispers of the Path echo through ancient canyons.', nodeCount: 8, dangerRatio: 0.4 },
   3: { name: 'The Six-Sense Reaches', description: 'Perception expands beyond flesh. What was unseen becomes tangible.', nodeCount: 9, dangerRatio: 0.5 },
@@ -33,6 +39,10 @@ const NODE_NAMES: Record<string, string[]> = {
     'The First Flame', 'Memory of the First Circle', 'The Silent Author\'s Echo',
     'Where the Path Began', 'The Unfinished Story', 'The Mirror of Self',
     'The Crossroads of Fate', 'Where All Paths Meet',
+  ],
+  hidden: [
+    'The Veiled Font', 'Shrouded Sanctuary', 'Forgotten Nexus', 'The 13th Step',
+    'Echo of the First', 'The Hidden Trial', 'Secret of the Void', 'Crack in Eternity',
   ],
 }
 
@@ -126,6 +136,10 @@ function shuffle<T>(arr: T[]): T[] {
   return copy
 }
 
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
 const WORLD_NODE_TYPE_MAP: Record<string, WorldNode['type']> = {
   safe: WorldNodeType.Safe,
   danger: WorldNodeType.Danger,
@@ -138,6 +152,7 @@ export function generateWorldMap(character: Character): WorldNode[] {
   _nodeIdCounter = 0
   const circle = Math.min(character.circle, 5)
   const region = REGIONS[circle] ?? REGIONS[5]
+  const regionMechanics = getRegionMechanics(circle)
   const nodes: WorldNode[] = []
 
   const nodeDistribution: { type: keyof typeof NODE_NAMES; count: number }[] = [
@@ -159,6 +174,35 @@ export function generateWorldMap(character: Character): WorldNode[] {
     const descs = [...NODE_DESCRIPTIONS[dist.type]]
     for (let i = 0; i < dist.count; i++) {
       const nameBase = names[i % names.length]
+      const perceptionReq = 0
+
+      const hazard =
+        dist.type === 'danger' || dist.type === 'boss'
+          ? pickRandom(
+              regionMechanics.availableHazards.filter((h) => h !== HazardType.None),
+            )
+          : Math.random() < 0.2
+            ? pickRandom(regionMechanics.availableHazards)
+            : HazardType.None
+
+      let discoveryGame = undefined
+      if (dist.type === 'discovery' && regionMechanics.minigameTypes.length > 0 && Math.random() < 0.4) {
+        const gameType = pickRandom(regionMechanics.minigameTypes)
+        const game = generateDiscoveryGame(gameType, circle)
+        if (game) discoveryGame = game
+      }
+
+      const loot = dist.type === 'discovery' || dist.type === 'boss'
+        ? generateLootDrop(circle, dist.type)
+        : undefined
+
+      const combatModifiers =
+        dist.type === 'danger'
+          ? ['hostile-territory']
+          : dist.type === 'boss'
+            ? ['oppressive-atmosphere', 'boss-arena']
+            : undefined
+
       const node: WorldNode = {
         id: nodeId(dist.type),
         type: WORLD_NODE_TYPE_MAP[dist.type] ?? WorldNodeType.Safe,
@@ -169,17 +213,53 @@ export function generateWorldMap(character: Character): WorldNode[] {
         events: EVENT_TEMPLATES[dist.type]?.map((t, idx) => ({
           ...t,
           id: `${nodeId(dist.type)}-event-${idx}`,
-          choices: t.choices.map((c, cIdx) => ({ ...c, id: `${nodeId(dist.type)}-choice-${cIdx}` })),
+          choices: t.choices.map((c, cIdx) => ({
+            ...c,
+            id: `${nodeId(dist.type)}-choice-${cIdx}`,
+          })),
         })) ?? [],
         visited: false,
+        hazard,
+        hidden: false,
+        perceptionRequired: perceptionReq,
+        discoveryGame,
+        loot,
+        combatModifiers,
       }
       nodes.push(node)
     }
   }
 
+  const hiddenCount = Math.max(1, Math.floor(region.nodeCount * regionMechanics.hiddenNodeChance))
+  const hiddenNames = shuffle([...NODE_NAMES.hidden])
+  for (let i = 0; i < hiddenCount; i++) {
+    const perceptionReq = 1 + Math.floor(Math.random() * 3)
+
+    const node: WorldNode = {
+      id: nodeId('hidden'),
+      type: WorldNodeType.Discovery,
+      region: region.name,
+      name: hiddenNames[i % hiddenNames.length],
+      description: 'A location obscured from ordinary perception. Only those with awakened senses can find it.',
+      connections: [],
+      events: [],
+      visited: false,
+      hazard: pickRandom(regionMechanics.availableHazards.filter((h) => h === HazardType.None || h === HazardType.ResonanceCrack)),
+      hidden: true,
+      perceptionRequired: perceptionReq,
+      discoveryGame: regionMechanics.minigameTypes.length > 0
+        ? generateDiscoveryGame(pickRandom(regionMechanics.minigameTypes), circle) ?? undefined
+        : undefined,
+      loot: generateLootDrop(circle, 'discovery'),
+    }
+    nodes.push(node)
+  }
+
   for (let i = 0; i < nodes.length; i++) {
     const connectionCount = 1 + Math.floor(Math.random() * 3)
-    const candidates = nodes.filter((_, j) => j !== i && !nodes[i].connections.includes(nodes[j].id))
+    const candidates = nodes.filter(
+      (_, j) => j !== i && !nodes[i].connections.includes(nodes[j].id),
+    )
     const shuffled = shuffle(candidates)
     for (let k = 0; k < Math.min(connectionCount, shuffled.length); k++) {
       nodes[i].connections.push(shuffled[k].id)
@@ -192,7 +272,9 @@ export function generateWorldMap(character: Character): WorldNode[] {
   return nodes
 }
 
-export function getRegionForCircle(circle: number): { name: string; description: string } {
+export function getRegionForCircle(
+  circle: number,
+): { name: string; description: string } {
   const region = REGIONS[Math.min(circle, 5)] ?? REGIONS[5]
   return { name: region.name, description: region.description }
 }
