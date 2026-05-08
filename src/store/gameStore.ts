@@ -14,6 +14,7 @@ import {
 
 type CharacterSlice = {
   character: Character
+  createCharacter: (character: Character) => void
   setCharacterName: (name: string) => void
   setChoiceAtDoors: (choice: 'peace' | 'ascent') => void
   gainEnergy: (amount: number) => void
@@ -197,6 +198,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
       time: next.time,
     }),
 
+  createCharacter: (character) =>
+    set(() => ({
+      character,
+      updatedAt: nowIso(),
+    })),
   setCharacterName: (name) =>
     set((state) => ({
       character: { ...state.character, name },

@@ -4,6 +4,7 @@ import { type PropsWithChildren } from 'react'
 type CosmicButtonProps = PropsWithChildren<
   HTMLMotionProps<'button'> & {
     glow?: 'soft' | 'strong'
+    size?: 'small' | 'medium' | 'large'
   }
 >
 
@@ -11,9 +12,15 @@ export function CosmicButton({
   children,
   className,
   glow = 'soft',
+  size = 'medium',
   ...props
 }: CosmicButtonProps) {
-  const mergedClass = ['cosmic-button', `cosmic-button-${glow}`, className]
+  const mergedClass = [
+    'cosmic-button',
+    `cosmic-button-${glow}`,
+    `cosmic-button-${size}`,
+    className
+  ]
     .filter(Boolean)
     .join(' ')
 
