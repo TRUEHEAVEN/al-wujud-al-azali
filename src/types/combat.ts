@@ -19,6 +19,26 @@ export const DamageType = {
 
 export type DamageType = (typeof DamageType)[keyof typeof DamageType]
 
+export const StatusEffectKind = {
+  Buff: 'buff',
+  Debuff: 'debuff',
+  HealOverTime: 'heal-over-time',
+  Shield: 'shield',
+  Stun: 'stun',
+  Dot: 'dot',
+} as const
+
+export type StatusEffectKind = (typeof StatusEffectKind)[keyof typeof StatusEffectKind]
+
+export interface StatusEffect {
+  id: string
+  name: string
+  kind: StatusEffectKind
+  value: number
+  turnsRemaining: number
+  sourceId: string
+}
+
 export interface CombatParticipant {
   id: string
   kind: 'player' | 'enemy'
@@ -26,7 +46,8 @@ export interface CombatParticipant {
   hp: number
   maxHp: number
   energy: number
-  statuses: string[]
+  statuses: StatusEffect[]
+  shield: number
 }
 
 export interface CombatFieldState {
@@ -43,4 +64,5 @@ export interface CombatState {
   field: CombatFieldState
   combatLog: string[]
   autoCombat: boolean
+  cooldowns: Record<string, number>
 }

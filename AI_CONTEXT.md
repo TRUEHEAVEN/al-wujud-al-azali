@@ -8,9 +8,11 @@
 - 0.1-0.4: Project foundation, types, state management, save system
 - 1.1-1.4: Design system, UI components, main menu, game HUD
 - 2.1-2.4: Character creation intro, doors choice, Three Trials questionnaire, and Path Generation Algorithm
-- 2.5: Game World & Core Loop — node-based world map, turn-based combat, core cultivation loop
+- 3.1: Combat Polish & Technique System — 21 techniques, status effects, cooldowns, shield/dodge mechanics
+- 3.2: Narrative Engine & Story Events — Branching narrative, choice-driven events, per-archetype text variants, codex unlocks
+- 3.3: World Exploration & Event Nodes — Environmental hazards, discovery minigames, Six Sense perception, hidden nodes, loot system, region mechanics
 
-🔄 **Next Priority:** Step 3.1 — Combat Polish & Technique System
+🔄 **Next Priority:** Step 3.4 — Cultivation Loop & Circle Ascension
 
 ## Architecture & Conventions
 
@@ -131,7 +133,7 @@ const action = useGameStore(state => state.actions)
 
 ### World & Combat
 - **Node-based Map:** Exploration with events
-- **Turn-based Combat:** Technique system with energy costs
+- **Turn-based Combat:** Technique system with 21 abilities, status effects (buffs/debuffs/DoTs/HoTs/shields/dodge), cooldown management, energy costs
 - **Six Sense:** Perception field that grows with circles
 - **Embodiment:** Transformation mechanics (Third Circle+)
 
@@ -159,7 +161,7 @@ const action = useGameStore(state => state.actions)
 - Screen reader friendly
 
 ## Current Development Focus
-**Step 2.5: Game World & Core Loop** — Implement the node-based world exploration system, turn-based combat mechanics, and the core cultivation progression loop that ties everything together.
+**Step 3.4: Cultivation Loop & Circle Ascension** — Implement mystery mark refinement, circle ascension rituals, foundation evolution, bone forging mechanics, and cultivation breakthrough events.
 
 ## Contact & Context
 This project follows a detailed development plan in `docs/step-X.X-implementation.md` files. Each step builds upon previous work with full TypeScript coverage and comprehensive testing.
