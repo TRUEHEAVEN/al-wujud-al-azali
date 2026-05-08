@@ -2565,6 +2565,704 @@ h1 {
 .inventory-item.rarity-rare .item-rarity { color: var(--gold-primary); }
 .inventory-item.rarity-legendary .item-rarity { color: #c084fc; }
 
+.item-type-badge {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gold-bright);
+  padding: 1px 0.3em;
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  align-self: center;
+}
+
+/* ── Inventory Panel ── */
+.inventory-panel {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.inventory-layout {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.inventory-main {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.inventory-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border: 1px solid rgb(122 99 48 / 25%);
+  border-radius: var(--radius-tight);
+  background: rgb(15 15 20 / 40%);
+  color: var(--ash-faint);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.filter-tab:hover {
+  background: rgb(201 168 76 / 10%);
+  color: var(--ash-white);
+}
+
+.filter-tab.active {
+  background: rgb(201 168 76 / 18%);
+  color: var(--gold-bright);
+  border-color: var(--gold-dim);
+}
+
+.inventory-count {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--ash-faint);
+}
+
+.inventory-empty {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.inventory-empty-hint {
+  font-size: 0.8rem;
+  color: var(--ash-faint);
+  margin: 0;
+}
+
+.inventory-grid-large {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-2);
+}
+
+.inventory-slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-tight);
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.inventory-slot.rarity-common {
+  border: 1px solid rgb(122 99 48 / 25%);
+  background: rgb(15 15 20 / 60%);
+}
+
+.inventory-slot.rarity-uncommon {
+  border: 1px solid rgb(26 58 107 / 40%);
+  background: rgb(26 58 107 / 10%);
+}
+
+.inventory-slot.rarity-rare {
+  border: 1px solid var(--gold-primary);
+  background: rgb(201 168 76 / 8%);
+}
+
+.inventory-slot.rarity-legendary {
+  border: 1px solid #9b30ff;
+  background: rgb(155 48 255 / 10%);
+  box-shadow: 0 0 10px rgb(155 48 255 / 20%);
+}
+
+.inventory-slot.selected {
+  border-color: var(--gold-bright);
+  box-shadow: var(--glow-soft);
+}
+
+.inventory-slot.unavailable {
+  opacity: 0.5;
+}
+
+.inventory-slot-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.rarity-symbol {
+  font-size: 1.1rem;
+}
+
+.slot-icon-small {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.inventory-slot-name {
+  font-family: var(--font-ui);
+  font-size: 0.73rem;
+  color: var(--ash-white);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.inventory-slot-type {
+  text-align: center;
+}
+
+.type-label {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ash-faint);
+  padding: 1px 0.4em;
+  border: 1px solid rgb(122 99 48 / 20%);
+  border-radius: var(--radius-tight);
+}
+
+.inventory-slot-req {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  color: var(--blood-red);
+  text-align: center;
+}
+
+.inventory-slot-value {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  color: var(--gold-primary);
+  text-align: center;
+}
+
+.inventory-sidebar {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-bright);
+  margin: 0 0 var(--space-2) 0;
+  text-shadow: var(--glow-soft);
+}
+
+.equipped-slots {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.equipped-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-tight);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.equipped-slot.empty {
+  border: 1px solid rgb(122 99 48 / 15%);
+  background: rgb(15 15 20 / 40%);
+}
+
+.equipped-slot.filled.rarity-common {
+  border: 1px solid rgb(122 99 48 / 30%);
+  background: rgb(15 15 20 / 60%);
+}
+
+.equipped-slot.filled.rarity-uncommon {
+  border: 1px solid rgb(26 58 107 / 40%);
+  background: rgb(26 58 107 / 10%);
+}
+
+.equipped-slot.filled.rarity-rare {
+  border: 1px solid var(--gold-primary);
+  background: rgb(201 168 76 / 8%);
+}
+
+.equipped-slot.filled.rarity-legendary {
+  border: 1px solid #9b30ff;
+  background: rgb(155 48 255 / 10%);
+  box-shadow: 0 0 10px rgb(155 48 255 / 20%);
+}
+
+.equipped-slot.selected {
+  border-color: var(--gold-bright) !important;
+  box-shadow: var(--glow-soft);
+}
+
+.equipped-slot-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.equipped-slot-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.equipped-slot-label {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ash-faint);
+}
+
+.equipped-slot-name {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ash-white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.equipped-slot-name.empty-text {
+  color: var(--ash-faint);
+  font-style: italic;
+}
+
+.equipped-slot-rarity {
+  font-size: 0.8rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.equipment-bonuses-section {
+  margin-top: var(--space-2);
+}
+
+.bonus-list {
+  display: grid;
+  gap: 2px;
+}
+
+.bonus-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.bonus-stat {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--ash-faint);
+  text-transform: capitalize;
+}
+
+.bonus-value {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+
+.equipment-actions-sidebar {
+  margin-top: var(--space-2);
+}
+
+.inventory-detail {
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  background: linear-gradient(160deg, rgb(19 19 26 / 96%), rgb(5 5 8 / 92%));
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-panel);
+}
+
+.inventory-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.inventory-detail-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.inventory-detail-rarity {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ash-faint);
+  padding: 2px 0.5em;
+  border: 1px solid rgb(122 99 48 / 30%);
+  border-radius: var(--radius-tight);
+}
+
+.inventory-detail-desc {
+  font-size: 0.85rem;
+  color: var(--ash-white);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.inventory-detail-lore {
+  font-size: 0.8rem;
+  color: var(--gold-muted);
+  margin: 0;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.inventory-detail-stats {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.detail-stat-group h4,
+.detail-effect-group h4 {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--gold-bright);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.stat-bonus-list,
+.effect-list {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.stat-bonus-tag {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--gold-bright);
+  padding: 2px 0.5em;
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  background: rgb(201 168 76 / 8%);
+}
+
+.effect-tag {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--spirit-blue);
+  padding: 2px 0.5em;
+  border: 1px solid rgb(26 58 107 / 40%);
+  border-radius: var(--radius-tight);
+  background: rgb(26 58 107 / 8%);
+}
+
+.detail-req {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ash-faint);
+}
+
+.inventory-detail-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ── Equipment Panel ── */
+.equipment-panel {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.equipment-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.equipment-slots-area {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.equipment-slot-card {
+  border: 1px solid rgb(122 99 48 / 20%);
+  border-radius: var(--radius-tight);
+  background: rgb(15 15 20 / 60%);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.equipment-slot-card.filled.rarity-common { border-color: rgb(122 99 48 / 30%); }
+.equipment-slot-card.filled.rarity-uncommon { border-color: rgb(26 58 107 / 40%); }
+.equipment-slot-card.filled.rarity-rare { border-color: var(--gold-primary); }
+.equipment-slot-card.filled.rarity-legendary {
+  border-color: #9b30ff;
+  box-shadow: 0 0 10px rgb(155 48 255 / 15%);
+}
+
+.equipment-slot-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.equipment-slot-icon {
+  font-size: 1.1rem;
+}
+
+.equipment-slot-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--gold-bright);
+  text-shadow: var(--glow-soft);
+}
+
+.equipment-slot-filled {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.equipment-item-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+
+.equipment-item-desc {
+  font-size: 0.8rem;
+  color: var(--ash-white);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.equipment-item-lore {
+  font-size: 0.75rem;
+  color: var(--gold-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.equipment-item-bonuses {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.equipment-stat-bonus {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--gold-bright);
+  padding: 2px 0.5em;
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  background: rgb(201 168 76 / 8%);
+  text-transform: capitalize;
+}
+
+.equipment-item-effects {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.equipment-effect-tag {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  color: var(--spirit-blue);
+  padding: 2px 0.5em;
+  border: 1px solid rgb(26 58 107 / 40%);
+  border-radius: var(--radius-tight);
+  background: rgb(26 58 107 / 8%);
+}
+
+.equipment-unequip-btn {
+  align-self: start;
+}
+
+.equipment-slot-empty {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  text-align: center;
+  padding: var(--space-3) 0;
+}
+
+.equipment-empty-icon {
+  font-size: 1.5rem;
+  color: var(--ash-faint);
+  opacity: 0.4;
+}
+
+.equipment-empty-desc {
+  font-size: 0.75rem;
+  color: var(--ash-faint);
+  margin: 0;
+  line-height: 1.4;
+  max-width: 300px;
+}
+
+.equipment-empty-hint {
+  font-size: 0.68rem;
+  color: rgb(122 99 48 / 50%);
+  margin: 0;
+  font-style: italic;
+}
+
+.equipment-stats-area {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  position: sticky;
+  top: var(--space-4);
+}
+
+.equipment-synergy-section {
+  border: 1px solid rgb(122 99 48 / 20%);
+  border-radius: var(--radius-tight);
+  background: rgb(15 15 20 / 60%);
+  padding: var(--space-3);
+}
+
+.equipment-stats-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--gold-bright);
+  margin: 0 0 var(--space-2) 0;
+  text-shadow: var(--glow-soft);
+}
+
+.equipment-summary-stats {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-stat label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ash-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summary-stat span {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--ash-white);
+}
+
+.equipment-stat-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.equipment-stat-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px 0;
+}
+
+.equipment-stat-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ash-faint);
+  text-transform: capitalize;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.equipment-stat-base {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ash-white);
+  min-width: 20px;
+  text-align: right;
+}
+
+.equipment-stat-arrow {
+  font-size: 0.6rem;
+  color: var(--ash-faint);
+}
+
+.equipment-stat-effective {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: right;
+}
+
+.equipment-stat-bonus-text {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  color: var(--gold-primary);
+}
+
+.equipment-effects-list {
+  display: grid;
+  gap: 3px;
+}
+
+.equipment-effect-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.equipment-effect-kind {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--ash-faint);
+}
+
+.equipment-effect-value {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--spirit-blue);
+  font-weight: 600;
+}
+
+.equipment-no-bonuses {
+  text-align: center;
+  padding: var(--space-3);
+}
+
+.equipment-no-bonuses p {
+  font-size: 0.75rem;
+  color: var(--ash-faint);
+  margin: var(--space-1) 0 0 0;
+}
+
 /* ── Discovery Overlay ── */
 .discovery-overlay {
   position: fixed;
@@ -2883,6 +3581,476 @@ h1 {
   font-size: 1rem;
 }
 
+/* ── Cultivation Panel ── */
+.cultivation-panel {
+  display: grid;
+  gap: var(--space-6);
+  padding: 0;
+}
+
+.cultivation-overview {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.cultivation-top-bar {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.circle-progress-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.circle-progress-info {
+  display: grid;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.circle-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold-bright);
+  text-shadow: var(--glow-soft);
+}
+
+.circle-subtitle {
+  font-size: 1rem;
+  color: var(--gold-primary);
+  font-family: var(--font-body);
+  font-style: italic;
+}
+
+.circle-marks-progress {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.marks-progress-label {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ash-faint);
+}
+
+/* ── Ascension Requirements ── */
+.ascension-requirements {
+  border: var(--line-fine) solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  padding: var(--space-5);
+  background: linear-gradient(160deg, rgb(19 19 26 / 60%), rgb(5 5 8 / 70%));
+  display: grid;
+  gap: var(--space-4);
+}
+
+.ascension-requirements h4 {
+  font-family: var(--font-display);
+  color: var(--gold-primary);
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.req-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.req-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-tight);
+  border: var(--line-fine) solid transparent;
+}
+
+.req-met {
+  border-color: var(--gold-dim);
+  background: rgb(201 168 76 / 8%);
+}
+
+.req-met .req-label {
+  color: var(--gold-bright);
+}
+
+.req-met .req-value {
+  color: var(--gold-primary);
+}
+
+.req-unmet {
+  border-color: rgb(139 26 26 / 30%);
+  background: rgb(139 26 26 / 5%);
+}
+
+.req-unmet .req-label {
+  color: var(--ash-faint);
+}
+
+.req-unmet .req-value {
+  color: var(--blood-red);
+}
+
+.req-label {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.req-value {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+}
+
+.ascend-btn {
+  width: 100%;
+  padding: var(--space-4);
+  font-size: 1.1rem;
+}
+
+.ascend-locked {
+  display: grid;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.unmet-list {
+  margin: 0;
+  padding: 0 var(--space-4);
+  list-style: none;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.unmet-list li {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--blood-red);
+  opacity: 0.8;
+}
+
+/* ── Ascension Ritual ── */
+.ascension-ritual {
+  display: grid;
+  place-items: center;
+  gap: var(--space-6);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.ritual-circle-visual {
+  display: grid;
+  place-items: center;
+}
+
+.ritual-phrase {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--gold-primary);
+  font-style: italic;
+  min-height: 2em;
+  text-shadow: var(--glow-soft);
+}
+
+/* ── Cultivation Details ── */
+.cultivation-details {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.cultivation-section {
+  border: var(--line-fine) solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  padding: var(--space-5);
+  background: linear-gradient(160deg, rgb(10 10 15 / 60%), rgb(5 5 8 / 50%));
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cultivation-section h4 {
+  font-family: var(--font-display);
+  color: var(--gold-primary);
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+/* ── Mastery Info ── */
+.mastery-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.mastery-stage-badge {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border: var(--line-fine) solid var(--gold-primary);
+  border-radius: var(--radius-tight);
+  text-shadow: var(--glow-soft);
+}
+
+.mastery-marks {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--ash-white);
+}
+
+.mastery-multiplier {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--spirit-blue);
+}
+
+/* ── Foundation Info ── */
+.foundation-info {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.foundation-stage-evolution {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+}
+
+.foundation-stage-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.stage-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: var(--line-fine) solid var(--gold-dim);
+}
+
+.stage-reached .stage-dot {
+  background: var(--gold-bright);
+  border-color: var(--gold-primary);
+  box-shadow: var(--glow-soft);
+}
+
+.stage-locked .stage-dot {
+  background: transparent;
+  border-color: var(--ash-faint);
+  opacity: 0.4;
+}
+
+.stage-label {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  color: var(--ash-faint);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.stage-reached .stage-label {
+  color: var(--gold-primary);
+}
+
+.foundation-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ash-white);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.foundation-integrity {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--spirit-blue);
+}
+
+.foundation-requirement-hint {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--ash-faint);
+  font-style: italic;
+}
+
+/* ── Bone Grid ── */
+.bone-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.bone-grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bone-count {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--gold-bright);
+  text-shadow: var(--glow-soft);
+}
+
+.bone-label {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ash-faint);
+}
+
+.bone-grid-visual {
+  background: rgb(0 0 0 / 40%);
+  border: var(--line-fine) solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  padding: var(--space-2);
+  max-height: 260px;
+  overflow: hidden;
+}
+
+.bone-dot {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.bone-dot-forged {
+  background: var(--gold-bright);
+  box-shadow: 0 0 4px var(--gold-bright);
+}
+
+.bone-dot-unforged {
+  background: rgb(122 99 48 / 15%);
+  border: 1px solid rgb(122 99 48 / 8%);
+}
+
+.bone-dot-empty {
+  background: transparent;
+}
+
+.bone-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bone-cost {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ash-faint);
+}
+
+/* ── Circle Bonuses ── */
+.circle-bonuses {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.bonus-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: var(--line-fine) solid var(--gold-dim);
+  border-radius: var(--radius-tight);
+  background: rgb(201 168 76 / 5%);
+}
+
+.bonus-item label {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--ash-faint);
+  text-transform: uppercase;
+}
+
+.bonus-item span {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold-primary);
+}
+
+.current-unlocks {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.current-unlocks h5 {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--gold-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.unlock-list {
+  margin: 0;
+  padding: 0 var(--space-4);
+  list-style: none;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.unlock-list li {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ash-white);
+}
+
+.unlock-list li::before {
+  content: '\2728 ';
+  color: var(--gold-primary);
+  font-size: 0.7rem;
+}
+
+/* ── Responsive cultivation ── */
+@media (max-width: 768px) {
+  .circle-progress-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .req-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bone-grid-visual {
+    max-height: 180px;
+  }
+
+  .ascension-ritual {
+    padding: var(--space-4);
+  }
+
+  .ritual-phrase {
+    font-size: 1rem;
+  }
+
+  .foundation-stage-evolution {
+    flex-wrap: wrap;
+  }
+
+  .foundation-stage-dot {
+    min-width: 54px;
+  }
+}
+
 /* ── Notification types ── */
 .notification-hazard {
   border-color: #ff8c00;
@@ -2922,5 +4090,30 @@ h1 {
 
   .inventory-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .inventory-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-sidebar {
+    order: -1;
+  }
+
+  .equipment-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .equipment-stats-area {
+    order: -1;
+    position: static;
+  }
+
+  .inventory-grid-large {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .filter-tabs {
+    justify-content: flex-start;
   }
 }

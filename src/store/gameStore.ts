@@ -6,12 +6,30 @@ import {
   WorldNodeType,
   type Character,
   type CombatState,
+  type EquipmentItem,
+  type EquipmentState,
   type GameState,
+  type InventoryItem,
   type LootItem,
   type NarrativeEvent,
   type TimeState,
   type WorldNode,
+  DEFAULT_EQUIPMENT_STATE,
+  EquipmentSlot,
 } from '../types'
+import {
+  performAscension,
+  checkBoneForge,
+  applyBoneForge,
+  checkFoundationEvolution,
+  evolveFoundation,
+  refineMysteryMarks,
+} from '../systems/cultivationEngine'
+import {
+  equipItem,
+  unequipItem,
+  canEquip,
+} from '../systems/equipmentEngine'
 
 type CharacterSlice = {
   character: Character
@@ -29,8 +47,15 @@ type WorldSlice = {
   visitNode: (nodeId: string) => void
   setCurrentNode: (nodeId: string | null) => void
   revealHiddenNode: (nodeId: string) => void
-  addLootToInventory: (items: LootItem[]) => void
+  addLootToInventory: (items: InventoryItem[]) => void
   markDiscoveryComplete: (gameId: string) => void
+}
+
+type EquipmentSlice = {
+  equipItemAction: (itemIndex: number) => { success: boolean; message: string }
+  unequipItemAction: (slot: keyof EquipmentState) => { success: boolean; message: string }
+  discardItem: (itemIndex: number) => { success: boolean; message: string }
+  useLootItem: (itemId: string) => { used: boolean; message: string }
 }
 
 type CombatSlice = {
@@ -57,6 +82,10 @@ type CultivationSlice = {
   setCanAscend: (value: boolean) => void
   setAvailableTechniques: (techniques: string[]) => void
   gainMarks: (amount: number) => void
+  ascendCircle: () => Character | null
+  forgeBoneMax: () => { success: boolean; message: string }
+  evolveFoundationAction: () => { evolved: boolean; newStage: string }
+  refineMasteryStage: () => { stageAdvanced: boolean; newStage: string }
 }
 
 type TimeSlice = {
@@ -89,6 +118,7 @@ export type GameStore = CharacterSlice &
   CombatSlice &
   NarrativeSlice &
   CultivationSlice &
+  EquipmentSlice &
   TimeSlice &
   MetaSlice
 
@@ -151,6 +181,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     revealedHiddenNodeIds: [],
     inventory: [],
     discoveredGameIds: [],
+    equipment: DEFAULT_EQUIPMENT_STATE,
   },
   combat: null,
   narrative: {
@@ -302,7 +333,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set((state) => ({
       world: {
         ...state.world,
-        inventory: [...state.world.inventory, ...items],
+        inventory: [...state.world.inventory, ...items] as InventoryItem[],
       },
       updatedAt: nowIso(),
     })),
@@ -410,7 +441,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   gainMarks: (amount) =>
     set((state) => {
       const nextCount = Math.max(0, state.character.mystery.count + amount)
-      const thresholdMultiplier = 1 + Math.floor(nextCount / 1000)
+      const totalMarks = nextCount + state.character.mystery.refinedTotal
+      const thresholdMultiplier = 1 + Math.floor(totalMarks / 1000)
       return {
         character: {
           ...state.character,
@@ -427,6 +459,254 @@ export const useGameStore = create<GameStore>((set, get) => ({
         updatedAt: nowIso(),
       }
     }),
+
+  ascendCircle: () => {
+    const state = get()
+    const ascended = performAscension(state.character)
+    if (ascended.circle === state.character.circle) return null
+    set({
+      character: ascended,
+      updatedAt: nowIso(),
+    })
+    return ascended
+  },
+
+  forgeBoneMax: () => {
+    const state = get()
+    const result = checkBoneForge(state.character)
+    if (!result.success) {
+      return { success: false, message: result.message }
+    }
+    const updatedChar = applyBoneForge(state.character, result)
+    set({
+      character: updatedChar,
+      updatedAt: nowIso(),
+    })
+    return { success: true, message: result.message }
+  },
+
+  evolveFoundationAction: () => {
+    const state = get()
+    const check = checkFoundationEvolution(state.character)
+    if (!check.canEvolve || !check.nextStage) {
+      return { evolved: false, newStage: state.character.foundation.stage }
+    }
+    const updatedChar = evolveFoundation(state.character)
+    set({
+      character: updatedChar,
+      updatedAt: nowIso(),
+    })
+    return { evolved: true, newStage: updatedChar.foundation.stage }
+  },
+
+  refineMasteryStage: () => {
+    const state = get()
+    const { character, stageAdvanced, newStage } = refineMysteryMarks(state.character)
+    if (!stageAdvanced) return { stageAdvanced: false, newStage }
+    set({
+      character,
+      updatedAt: nowIso(),
+    })
+    return { stageAdvanced: true, newStage }
+  },
+
+  equipItemAction: (itemIndex) => {
+    const state = get()
+    const item = state.world.inventory[itemIndex]
+    if (!item || item.type !== 'equipment') {
+      return { success: false, message: 'That item cannot be equipped.' }
+    }
+    const equipItemData = item as EquipmentItem
+    const result = equipItem(state.world.equipment, equipItemData, state.character.circle)
+    if (!result.success) {
+      return { success: false, message: result.message }
+    }
+    set({
+      world: {
+        ...state.world,
+        equipment: result.updatedEquipment,
+        inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+      },
+      updatedAt: nowIso(),
+    })
+    return { success: true, message: result.message }
+  },
+
+  unequipItemAction: (slot) => {
+    const state = get()
+    const result = unequipItem(state.world.equipment, slot)
+    if (!result.success) {
+      return { success: false, message: result.message }
+    }
+    const unequippedItem = state.world.equipment[slot]
+    set({
+      world: {
+        ...state.world,
+        equipment: result.updatedEquipment,
+        inventory: unequippedItem
+          ? [...state.world.inventory, unequippedItem]
+          : state.world.inventory,
+      },
+      updatedAt: nowIso(),
+    })
+    return { success: true, message: result.message }
+  },
+
+  discardItem: (itemIndex) => {
+    const state = get()
+    const item = state.world.inventory[itemIndex]
+    if (!item) {
+      return { success: false, message: 'Item not found in inventory.' }
+    }
+    const itemName = item.name
+    set({
+      world: {
+        ...state.world,
+        inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+      },
+      updatedAt: nowIso(),
+    })
+    return { success: true, message: `Discarded ${itemName}.` }
+  },
+
+  useLootItem: (itemId) => {
+    const state = get()
+    const itemIndex = state.world.inventory.findIndex((i) => i.id === itemId)
+    if (itemIndex < 0) return { used: false, message: 'Item not found in inventory.' }
+
+    const item = state.world.inventory[itemIndex]
+
+    if (item.type === 'equipment') {
+      const equipItemData = item as EquipmentItem
+      if (equipItemData.slot === EquipmentSlot.Consumable) {
+        let message = `Used ${item.name}.`
+        let char = state.character
+
+        if (itemId === 'consumable-mark-elixir') {
+          char = {
+            ...char,
+            mystery: {
+              ...char.mystery,
+              count: char.mystery.count + 30,
+            },
+          }
+          message = `Used ${item.name}. Gained 30 Mystery Marks.`
+        } else if (itemId === 'consumable-spirit-draught') {
+          const maxEnergy = char.mindSpace
+          char = {
+            ...char,
+            currentEnergy: Math.min(maxEnergy, char.currentEnergy + 40),
+          }
+          message = `Used ${item.name}. Restored 40 Path Energy.`
+        } else if (itemId === 'consumable-bone-tonic') {
+          char = {
+            ...char,
+            mystery: {
+              ...char.mystery,
+              count: char.mystery.count + 50,
+            },
+            foundation: {
+              ...char.foundation,
+              integrity: Math.min(100, char.foundation.integrity + 5),
+            },
+          }
+          message = `Used ${item.name}. Gained 50 Marks and Foundation integrity.`
+        } else if (itemId === 'consumable-foundation-crystal') {
+          const nextStage =
+            char.foundation.stage === FoundationStage.Egg
+              ? FoundationStage.Crystalline
+              : char.foundation.stage === FoundationStage.Crystalline
+                ? FoundationStage.Patterned
+                : char.foundation.stage
+          const evolved = nextStage !== char.foundation.stage
+          char = {
+            ...char,
+            mystery: {
+              ...char.mystery,
+              count: char.mystery.count + 100,
+            },
+            foundation: {
+              ...char.foundation,
+              stage: nextStage,
+              integrity: 100,
+              cracked: false,
+            },
+          }
+          message = evolved
+            ? `Used ${item.name}. Foundation evolved to ${nextStage}! Gained 100 Marks.`
+            : `Used ${item.name}. Foundation restored to full integrity. Gained 100 Marks.`
+        }
+
+        set({
+          character: char,
+          world: {
+            ...state.world,
+            inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+          },
+          updatedAt: nowIso(),
+        })
+        return { used: true, message }
+      }
+      return { used: false, message: 'Equipment must be equipped, not used directly.' }
+    }
+
+    if (item.type === 'consumable') {
+      if (itemId === 'loot-foundation-essence') {
+        const char = {
+          ...state.character,
+          mystery: {
+            ...state.character.mystery,
+            count: state.character.mystery.count + item.value,
+          },
+          foundation: {
+            ...state.character.foundation,
+            integrity: Math.min(100, state.character.foundation.integrity + 10),
+          },
+        }
+        set({
+          character: char,
+          world: {
+            ...state.world,
+            inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+          },
+          updatedAt: nowIso(),
+        })
+        return { used: true, message: `Used ${item.name}. Gained ${item.value} Marks and strengthened Foundation.` }
+      }
+
+      set({
+        character: {
+          ...state.character,
+          mystery: {
+            ...state.character.mystery,
+            count: state.character.mystery.count + item.value,
+          },
+        },
+        world: {
+          ...state.world,
+          inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+        },
+        updatedAt: nowIso(),
+      })
+      return { used: true, message: `Used ${item.name}. Gained ${item.value} Marks.` }
+    }
+
+    set({
+      character: {
+        ...state.character,
+        mystery: {
+          ...state.character.mystery,
+          count: state.character.mystery.count + item.value,
+        },
+      },
+      world: {
+        ...state.world,
+        inventory: state.world.inventory.filter((_, i) => i !== itemIndex),
+      },
+      updatedAt: nowIso(),
+    })
+    return { used: true, message: `Used ${item.name}. Gained ${item.value} Marks.` }
+  },
 
   advanceTicks: (ticks) =>
     set((state) => ({

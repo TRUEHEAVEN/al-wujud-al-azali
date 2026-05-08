@@ -1,5 +1,8 @@
 import { HazardType, type HazardDefinition, type HazardResult, HazardEffectKind, SixSenseLevel, DiscoveryGameType, type DiscoveryGame, type DiscoveryReward, type LootItem, type PerceptionField } from '../types/exploration'
 import { HAZARDS, DISCOVERY_GAME_TEMPLATES, LOOT_TABLE, getRegionMechanics } from '../data/explorationData'
+import { getEquipableLoot } from '../data/equipmentData'
+import type { EquipmentItem } from '../types/equipment'
+import type { InventoryItem } from '../types/gameState'
 import type { Character } from '../types/character'
 
 let _gameIdCounter = 0
@@ -107,9 +110,9 @@ export function generateDiscoveryGame(
 export function generateLootDrop(
   circle: number,
   nodeType: string,
-): LootItem[] {
+): InventoryItem[] {
   const mechanics = getRegionMechanics(circle)
-  const drops: LootItem[] = []
+  const drops: InventoryItem[] = []
 
   const dropCount = nodeType === 'discovery'
     ? 1 + Math.floor(Math.random() * 3)
@@ -117,7 +120,16 @@ export function generateLootDrop(
       ? 2 + Math.floor(Math.random() * 3)
       : Math.random() < 0.3 ? 1 : 0
 
+  const equipChance = 0.25 + circle * 0.05
+  const equipPool = getEquipableLoot(circle)
+
   for (let i = 0; i < dropCount; i++) {
+    if (Math.random() < equipChance && equipPool.length > 0) {
+      const pick = equipPool[Math.floor(Math.random() * equipPool.length)]
+      drops.push({ ...pick, value: Math.floor(pick.value * mechanics.lootMultiplier) })
+      continue
+    }
+
     const rarityRoll = Math.random() * (1 + circle * 0.15)
     let rarity: LootItem['rarity']
     if (rarityRoll > 0.95) rarity = 'legendary'

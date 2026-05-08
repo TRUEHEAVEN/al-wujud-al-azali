@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CircleRing } from '../components/CircleRing'
 import { CosmicButton } from '../components/CosmicButton'
+import { CultivationPanel } from '../components/CultivationPanel'
 import { DiscoveryOverlay } from '../components/DiscoveryOverlay'
 import type { DiscoveryReward } from '../types/exploration'
 import { EnergyBar } from '../components/EnergyBar'
+import { EquipmentPanel } from '../components/EquipmentPanel'
 import { FoundationDisplay } from '../components/FoundationDisplay'
 import { GlyphPanel } from '../components/GlyphPanel'
+import { InventoryPanel } from '../components/InventoryPanel'
 import { MysteryCounter } from '../components/MysteryCounter'
 import { NarrativeOverlay } from '../components/NarrativeOverlay'
 import type { ResolvedNarrativeEvent } from '../components/NarrativeOverlay'
@@ -38,6 +41,11 @@ import {
   derivePerceptionField,
   checkHiddenNodeVisibility,
 } from '../systems/explorationEngine'
+import {
+  checkCircleAscension,
+  checkFoundationEvolution,
+  getCultivationSummary,
+} from '../systems/cultivationEngine'
 import { getNodeEventsForType, COMBAT_EVENTS } from '../data/narrativeEvents'
 import { getHazardDefinition } from '../data/explorationData'
 import { HazardType } from '../types/exploration'
@@ -45,7 +53,7 @@ import type { WorldNode } from '../types/world'
 import type { CombatState } from '../types/combat'
 import type { DiscoveryGame } from '../types/exploration'
 
-type GameView = 'map' | 'character' | 'codex' | 'techniques' | 'options'
+type GameView = 'map' | 'character' | 'codex' | 'techniques' | 'cultivation' | 'inventory' | 'options'
 
 interface Notification {
   id: string
@@ -142,6 +150,24 @@ export function GameScreen() {
       }
     }
   }, [world.nodes, world.revealedHiddenNodeIds, perceptionField, revealHiddenNode])
+
+  useEffect(() => {
+    const state = useGameStore.getState()
+    const check = checkCircleAscension(state.character)
+    if (check.can) {
+      addNotification(
+        `\u2728 Ascension available! You can now ascend to Circle ${check.nextCircle}: ${check.requirement.name}.`,
+        'stage',
+      )
+    }
+    const foundationCheck = checkFoundationEvolution(state.character)
+    if (foundationCheck.canEvolve) {
+      addNotification(
+        `\u{1F4AA} Foundation can evolve to ${foundationCheck.nextStage}!`,
+        'stage',
+      )
+    }
+  }, [character.mystery.count, character.mystery.bones, character.circle])
 
   const currentNode = useMemo(
     () => world.nodes.find((n) => n.id === world.currentNodeId) ?? null,
@@ -1188,6 +1214,7 @@ export function GameScreen() {
                         <span>{character.age + time.year}</span>
                       </div>
                     </div>
+                    <EquipmentPanel onNotification={addNotification} />
                     {inventory.length > 0 && (
                       <div className="inventory-section">
                         <h3>Inventory ({inventory.length})</h3>
@@ -1199,6 +1226,9 @@ export function GameScreen() {
                             >
                               <span className="item-name">{item.name}</span>
                               <span className="item-rarity">{item.rarity}</span>
+                              {item.type === 'equipment' && (
+                                <span className="item-type-badge">Equip</span>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -1296,6 +1326,18 @@ export function GameScreen() {
                 </GlyphPanel>
               )}
 
+              {currentView === 'cultivation' && (
+                <GlyphPanel title="Cultivation">
+                  <CultivationPanel onNotification={addNotification} />
+                </GlyphPanel>
+              )}
+
+              {currentView === 'inventory' && (
+                <GlyphPanel title="Inventory & Equipment">
+                  <InventoryPanel onNotification={addNotification} />
+                </GlyphPanel>
+              )}
+
               {currentView === 'options' && (
                 <GlyphPanel title="Options">
                   <div className="options-content">
@@ -1377,6 +1419,16 @@ export function GameScreen() {
                 id: 'techniques' as GameView,
                 label: 'Arts',
                 icon: '\u2694\uFE0F',
+              },
+              {
+                id: 'cultivation' as GameView,
+                label: 'Cultivate',
+                icon: '\u2728',
+              },
+              {
+                id: 'inventory' as GameView,
+                label: 'Items',
+                icon: '\u{1F392}',
               },
               {
                 id: 'options' as GameView,

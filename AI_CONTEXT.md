@@ -11,8 +11,10 @@
 - 3.1: Combat Polish & Technique System — 21 techniques, status effects, cooldowns, shield/dodge mechanics
 - 3.2: Narrative Engine & Story Events — Branching narrative, choice-driven events, per-archetype text variants, codex unlocks
 - 3.3: World Exploration & Event Nodes — Environmental hazards, discovery minigames, Six Sense perception, hidden nodes, loot system, region mechanics
+- 3.4: Cultivation Loop & Circle Ascension — 9-circle progression, mystery mark refinement, bone forging (206 bones), foundation evolution (Egg→Dense), ascension rituals, mastery stages
+- 3.5: Inventory & Equipment — 20+ equipable items, 4 equipment slots, stat bonuses, consumables, rarity tiers, inventory filtering, equipment comparison
 
-🔄 **Next Priority:** Step 3.4 — Cultivation Loop & Circle Ascension
+🔄 **Next Priority:** Step 3.6 — Embodiment System
 
 ## Architecture & Conventions
 
@@ -161,7 +163,7 @@ const action = useGameStore(state => state.actions)
 - Screen reader friendly
 
 ## Current Development Focus
-**Step 3.4: Cultivation Loop & Circle Ascension** — Implement mystery mark refinement, circle ascension rituals, foundation evolution, bone forging mechanics, and cultivation breakthrough events.
+**Step 3.6: Embodiment System** — Implement Third Circle transformation mechanics, visual form changes, elemental affinities, and embodiment progression.
 
 ## Contact & Context
 This project follows a detailed development plan in `docs/step-X.X-implementation.md` files. Each step builds upon previous work with full TypeScript coverage and comprehensive testing.

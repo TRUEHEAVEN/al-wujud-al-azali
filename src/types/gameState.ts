@@ -2,10 +2,13 @@ import type { Character } from './character'
 import type { Circle } from './circle'
 import type { CombatState } from './combat'
 import type { ISODateString } from './common'
+import type { EquipmentItem, EquipmentState } from './equipment'
 import type { LootItem } from './exploration'
 import type { NarrativeEvent } from './narrative'
 import type { TrialResult } from './trials'
 import type { WorldNode } from './world'
+
+export type InventoryItem = LootItem | EquipmentItem
 
 export interface TimeState {
   year: number
@@ -19,8 +22,9 @@ export interface WorldState {
   nodes: WorldNode[]
   visitedNodeIds: string[]
   revealedHiddenNodeIds: string[]
-  inventory: LootItem[]
+  inventory: InventoryItem[]
   discoveredGameIds: string[]
+  equipment: EquipmentState
 }
 
 export interface NarrativeState {

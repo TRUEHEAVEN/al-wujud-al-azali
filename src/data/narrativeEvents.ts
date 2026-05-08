@@ -288,7 +288,7 @@ export const CIRCLE_EVENTS: NarrativeEvent[] = [
     scenes: [
       {
         id: 'c2-1',
-        text: 'Your Second Circle crystallizes within you. The world sharpens—colors deepen, sounds gain texture, and the flow of Path energy becomes visible as faint golden threads.',
+        text: 'Your Second Circle crystallizes within you. The world sharpens\u2014colors deepen, sounds gain texture, and the flow of Path energy becomes visible as faint golden threads.',
         mood: 'triumphant',
         speaker: 'Narrator',
         archetypeVariant: {
@@ -316,7 +316,7 @@ export const CIRCLE_EVENTS: NarrativeEvent[] = [
     scenes: [
       {
         id: 'c3-1',
-        text: 'The Third Circle brings Embodiment—the power to manifest your Path physically. Your body begins to transform, taking on qualities of your cultivated element.',
+        text: 'The Third Circle brings Embodiment\u2014the power to manifest your Path physically. Your body begins to transform, taking on qualities of your cultivated element.',
         mood: 'triumphant',
         speaker: 'Narrator',
         archetypeVariant: {
@@ -336,6 +336,174 @@ export const CIRCLE_EVENTS: NarrativeEvent[] = [
     ],
     minCircle: 3,
     maxCircle: 3,
+  },
+  {
+    id: 'circle-4-control',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-4',
+    scenes: [
+      {
+        id: 'c4-1',
+        text: 'The Fourth Circle\u2014Control. Your First Ten bones sing in chorus. The flow of Marks through your body becomes a conscious act, not instinct. You are no longer a passenger on the Path\u2014you are its driver.',
+        mood: 'triumphant',
+        speaker: 'Narrator',
+        archetypeVariant: {
+          'void-watcher': 'Your Void Gaze now sees the connections between things. Cause and effect become visible threads. You can trace them\u2014and pull.',
+          'bone-harvester': 'Your ten forged bones form a lattice of power. Where flesh was weak, now bone-armor grows. You are the weapon and the wielder.',
+          'rift-saint': 'You feel the rifts not as wounds but as levers. With subtle pressure, you can widen them\u2014or seal them.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'master-control',
+        text: 'Seize control of your Path energy',
+        tags: ['Control', 'Mastery', 'Power'],
+        effects: ['marks:gain:150', 'technique:unlock', 'codex:unlock:fourth-circle'],
+      },
+    ],
+    minCircle: 4,
+    maxCircle: 4,
+  },
+  {
+    id: 'circle-5-red-dust',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-5',
+    scenes: [
+      {
+        id: 'c5-1',
+        text: 'The Fifth Circle\u2014Red Dust. Mortality whispers its last goodbyes. The attachments of the mortal world cling like red dust, but you have learned to shake them free. What dies in you makes room for what will be born.',
+        mood: 'mysterious',
+        speaker: 'Narrator',
+        archetypeVariant: {
+          'void-watcher': 'The void no longer frightens you. It speaks. Its voice is the absence between words, the silence between heartbeats. You begin to understand.',
+          'bone-harvester': 'Fifty bones now anchor your power. The pain of forging was the price of ascension. You have paid it willingly\u2014and grown.',
+          'silent-flame': 'Your flame now burns with its own intelligence. It remembers what you burn. It learns.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'embrace-rebirth',
+        text: 'Let the old self burn away',
+        tags: ['Rebirth', 'Transformation', 'Sacrifice'],
+        effects: ['marks:gain:300', 'technique:unlock', 'codex:unlock:fifth-circle'],
+      },
+    ],
+    minCircle: 5,
+    maxCircle: 5,
+  },
+  {
+    id: 'circle-6-void-resonance',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-6',
+    scenes: [
+      {
+        id: 'c6-1',
+        text: 'The Sixth Circle\u2014Void Resonance. Space is no longer a barrier but a medium. Your Path resonates with the void itself, and distance becomes a suggestion. A hundred bones sing in your Foundation, and reality listens.',
+        mood: 'voiceless',
+        speaker: 'The Silent Author',
+        archetypeVariant: {
+          'void-watcher': 'You are becoming what you study. The boundary between observer and void dissolves. You see from everywhere at once.',
+          'bone-harvester': 'One hundred bones\u2014half the full architecture. Your skeletal structure now generates its own gravitational field. You are heavy with power.',
+          'rift-saint': 'You no longer walk between rifts. You create them. Each step is a wound in space that heals behind you.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'resonate-with-void',
+        text: 'Resonate with the void',
+        tags: ['Void', 'Power', 'Transcendence'],
+        effects: ['marks:gain:600', 'technique:unlock', 'codex:unlock:sixth-circle'],
+      },
+    ],
+    minCircle: 6,
+    maxCircle: 6,
+  },
+  {
+    id: 'circle-7-eternal-return',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-7',
+    scenes: [
+      {
+        id: 'c7-1',
+        text: 'The Seventh Circle\u2014Eternal Return. Death reveals itself as a doorway. Your Path loops back upon itself, each cycle adding layers of power like sediment becoming stone. One hundred fifty bones anchor you to eternity.',
+        mood: 'voiceless',
+        speaker: 'The Silent Author',
+        archetypeVariant: {
+          'void-watcher': 'You have died before. You remember it now. Each death was a lesson the void taught you. You will die again\u2014and return stronger.',
+          'bone-harvester': 'Your bones remember every fracture, every re-forging. Pain is a teacher. You are its star pupil.',
+          'silent-flame': 'Like a phoenix you have learned to unmake yourself. The flame that consumes also creates. You are the cycle.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'accept-eternity',
+        text: 'Accept the eternal cycle',
+        tags: ['Eternity', 'Cycles', 'Wisdom'],
+        effects: ['marks:gain:1200', 'technique:unlock', 'codex:unlock:seventh-circle'],
+      },
+    ],
+    minCircle: 7,
+    maxCircle: 7,
+  },
+  {
+    id: 'circle-8-silent-sovereignty',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-8',
+    scenes: [
+      {
+        id: 'c8-1',
+        text: 'The Eighth Circle\u2014Silent Sovereignty. Words fail. The names of things lose meaning as you approach the Author\u2019s threshold. One hundred eighty bones sing a chorus that only the void can hear. Your presence IS power.',
+        mood: 'voiceless',
+        speaker: 'The Silent Author',
+        archetypeVariant: {
+          'void-watcher': 'You no longer watch the void. You ARE the void watching itself. The observer and the observed have merged.',
+          'bone-harvester': 'Your skeleton is nearly complete. Each remaining bone is a challenge, a final test of worthiness. You will claim them all.',
+          'rift-saint': 'You are no longer a saint of rifts. You are their author. Reality bends to accommodate your passage.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'claim-sovereignty',
+        text: 'Claim your silent sovereignty',
+        tags: ['Sovereignty', 'Silence', 'Authority'],
+        effects: ['marks:gain:2500', 'technique:unlock', 'codex:unlock:eighth-circle'],
+      },
+    ],
+    minCircle: 8,
+    maxCircle: 8,
+  },
+  {
+    id: 'circle-9-eternal-existence',
+    trigger: 'circle-ascend',
+    triggerSource: 'circle-9',
+    scenes: [
+      {
+        id: 'c9-1',
+        text: 'The Ninth Circle\u2014AL-WUJUD AL-AZALI. The Eternal Existence. Two hundred bones anchor the full architecture. You are no longer walking the Path. You ARE the Path. All that was, is, and will be\u2014knows your name.',
+        mood: 'voiceless',
+        speaker: 'The Silent Author',
+        archetypeVariant: {
+          'void-watcher': 'There is nothing left to watch. You have seen the beginning and the end. They are the same moment. You are the space between.',
+          'bone-harvester': 'Two hundred six bones\u2014complete. The architecture of power is finished. You are the weapon that eternity forged for itself.',
+          'silent-flame': 'The flame has consumed everything, including itself. What remains is pure light\u2014the first and last illumination.',
+        },
+      },
+    ],
+    choices: [
+      {
+        id: 'eternal-existence',
+        text: 'Become the Eternal Existence',
+        tags: ['Eternity', 'Completion', 'Transcendence'],
+        effects: ['marks:gain:5000', 'technique:unlock', 'codex:unlock:ninth-circle'],
+      },
+    ],
+    minCircle: 9,
+    maxCircle: 9,
   },
 ]
 
@@ -408,9 +576,72 @@ export const CODEX_ENTRIES: CodexEntry[] = [
     category: 'lore',
     title: 'The 206 Bones of Mastery',
     subtitle: 'Anatomy of Ascension',
-    text: 'To reach the Controller stage, a cultivator must forge 206 bones within their Foundation. Each bone corresponds to a truth, a memory, a sacrifice. The full skeleton is the architecture of power—without it, no cultivator can advance beyond the Newborn stage. Some bones are harder to forge than others. The skull requires the greatest insight.',
+    text: 'To reach the Controller stage, a cultivator must forge 206 bones within their Foundation. Each bone corresponds to a truth, a memory, a sacrifice. The full skeleton is the architecture of power\u2014without it, no cultivator can advance beyond the Newborn stage. Some bones are harder to forge than others. The skull requires the greatest insight.',
     unlockCondition: { marks: 5000 },
     relatedEntryIds: ['formation-stage'],
+  },
+  {
+    id: 'fourth-circle',
+    category: 'lore',
+    title: 'The Fourth Circle \u2014 Control',
+    subtitle: 'Mastery of Self',
+    text: 'At the Fourth Circle, cultivation ceases to be reactive. The cultivator learns to control the flow of Marks consciously, directing power with precision rather than instinct. This is the threshold where the first ten bones are forged, creating a skeletal framework that stabilizes the Foundation against external pressure.',
+    unlockCondition: { circle: 4 },
+    relatedEntryIds: ['third-circle', 'bones-of-the-path'],
+  },
+  {
+    id: 'fifth-circle',
+    category: 'lore',
+    title: 'The Fifth Circle \u2014 Red Dust',
+    subtitle: 'The Mortal Shedding',
+    text: 'Red Dust is the residue of mortality\u2014the attachments, fears, and limitations that cling to all beings. To reach the Fifth Circle, a cultivator must burn away this dust through a symbolic rebirth. What emerges is no longer merely human. Fifty bones anchor the new self.',
+    unlockCondition: { circle: 5 },
+    relatedEntryIds: ['fourth-circle'],
+  },
+  {
+    id: 'sixth-circle',
+    category: 'lore',
+    title: 'The Sixth Circle \u2014 Void Resonance',
+    subtitle: 'Spatial Transcendence',
+    text: 'At the Sixth Circle, the cultivator achieves resonance with the void itself. A hundred bones now sing in harmonic unity, and the Foundation collapses into a Dense state\u2014a cultivation singularity. Space bends to the cultivator\'s will, and the Six Sense reaches Infinite range, perceiving threats and opportunities across vast distances.',
+    unlockCondition: { circle: 6 },
+    relatedEntryIds: ['fifth-circle', 'bones-of-the-path'],
+  },
+  {
+    id: 'seventh-circle',
+    category: 'lore',
+    title: 'The Seventh Circle \u2014 Eternal Return',
+    subtitle: 'The Deathless Cycle',
+    text: 'Death reveals its true nature at the Seventh Circle: it is not an end but a recursion. The cultivator plants a resurrection seed within their Foundation, ensuring that even if the body perishes, the Path continues in a new vessel\u2014stronger, wiser, carrying all previous experience forward. One hundred fifty bones secure this immortality.',
+    unlockCondition: { circle: 7 },
+    relatedEntryIds: ['sixth-circle'],
+  },
+  {
+    id: 'eighth-circle',
+    category: 'lore',
+    title: 'The Eighth Circle \u2014 Silent Sovereignty',
+    subtitle: 'The Author\'s Threshold',
+    text: 'The Eighth Circle brings the cultivator to the threshold of the Silent Author\u2014the metaphysical entity that weaves the fabric of all cultivation realities. At this level, words lose meaning. Power becomes presence. The cultivator can perceive and subtly influence the narrative threads that bind all beings. One hundred eighty bones are required for this sovereignty.',
+    unlockCondition: { circle: 8 },
+    relatedEntryIds: ['seventh-circle'],
+  },
+  {
+    id: 'ninth-circle',
+    category: 'cosmic',
+    title: 'The Ninth Circle \u2014 AL-WUJUD AL-AZALI',
+    subtitle: 'The Eternal Existence',
+    text: 'The final circle. Two hundred six bones complete the full architecture. The cultivator no longer walks the Path\u2014they ARE the Path. Existence itself becomes their cultivation. All that was, is, and will be recognizes their name. This is the state that the Silent Author intended: a being who has transcended cultivation to become a fundamental force of reality.',
+    unlockCondition: { circle: 9 },
+    relatedEntryIds: ['eighth-circle', 'bones-of-the-path'],
+  },
+  {
+    id: 'mastery-controller',
+    category: 'lore',
+    title: 'The Controller Stage',
+    subtitle: 'Architecture of Power',
+    text: 'To become a Controller is to move beyond mere accumulation of Marks. At 10,000 Marks, the cultivator enters the Controller mastery stage and can begin forging Mystery Bones\u2014the architectural framework of true power. Each bone costs 10,000 Marks and represents a fundamental truth absorbed into the cultivator\'s being. The full set of 206 bones is the gateway to higher circles.',
+    unlockCondition: { marks: 10000 },
+    relatedEntryIds: ['bones-of-the-path', 'formation-stage'],
   },
 ]
 
